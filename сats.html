@@ -1,0 +1,390 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Кошачьи находки</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;800&display=swap">
+<style>
+/* Layout: three rooms as levels on one stage; level tabs and counter above, notes and finale as paper overlays. Deliberately single-theme (evening). */
+:root{
+  --bg:#1f1a30; --glow:#ffd683; --paper:#fbf4e6; --ink:#3b2b33;
+  --muted:#c9bfdc; --text:#f3eefb; --accent:#ffb36b; --rug:#c47a8c;
+  --hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 28px;min-height:100%}
+.wrap{max-width:500px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+header{display:flex;flex-direction:column;gap:4px}
+h1{font-family:var(--hand);font-weight:700;font-size:2.4rem;line-height:1;margin:0;text-wrap:balance;color:var(--glow)}
+.hint{margin:0;color:var(--muted);font-size:.95rem;line-height:1.45}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{font:inherit;font-size:.82rem;font-weight:800;letter-spacing:.02em;border-radius:999px;padding:6px 12px;border:2px solid rgba(201,191,220,.35);background:transparent;color:var(--muted);cursor:pointer}
+.tab[aria-current="true"]{background:var(--glow);border-color:var(--glow);color:var(--ink)}
+.tab.done:not([aria-current="true"]){border-color:var(--glow);color:var(--glow)}
+.tab:disabled{opacity:.4;cursor:not-allowed}
+.tab:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.bar{display:flex;align-items:center;gap:10px;font-weight:800;font-size:.9rem;letter-spacing:.02em;flex-wrap:wrap}
+.dots{display:flex;gap:6px}
+.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--muted);display:block;transition:.3s}
+.dots i.on{background:var(--glow);border-color:var(--glow);box-shadow:0 0 10px var(--glow)}
+
+.stage{position:relative;width:100%;aspect-ratio:3/4;max-width:100%;border-radius:18px;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation;box-shadow:0 20px 50px rgba(0,0,0,.45);transition:background .5s}
+.scene{position:absolute;inset:0}
+.glowspot{position:absolute;inset:0;pointer-events:none}
+.deco{position:absolute;pointer-events:none}
+.obj{position:absolute;border:0;padding:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.obj:focus-visible{outline:3px dashed var(--glow);outline-offset:4px;border-radius:8px}
+.obj svg,.deco svg{width:100%;height:100%;display:block;overflow:visible}
+.spark{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--glow);box-shadow:0 0 12px 4px rgba(255,214,131,.7);animation:tw 2.2s ease-in-out infinite;pointer-events:none}
+.obj.found .spark{display:none}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1)}}
+.twinkle{animation:tw 3s ease-in-out infinite}
+
+.cat{position:absolute;width:20%;transform:translate(-50%,-100%);z-index:50;cursor:pointer;transition-property:left,top;transition-timing-function:linear}
+.cat .flip{transition:transform .2s}
+.cat.left .flip{transform:scaleX(-1)}
+.cat svg{display:block;width:100%;overflow:visible}
+.cat.walking .bob{animation:bob .32s ease-in-out infinite}
+.cat.walking .leg-a{animation:leg .32s ease-in-out infinite}
+.cat.walking .leg-b{animation:leg .32s ease-in-out infinite reverse}
+.leg-a,.leg-b{transform-box:fill-box;transform-origin:top center}
+.cat .tail{transform-origin:22px 70px}
+.cat.happy .tail{animation:wag .25s ease-in-out 6}
+.cat.sniff .head{animation:sniff .18s ease-in-out 5;transform-origin:88px 60px}
+@keyframes bob{50%{transform:translateY(-3px)}}
+@keyframes leg{0%,100%{transform:rotate(14deg)}50%{transform:rotate(-14deg)}}
+@keyframes wag{50%{transform:rotate(16deg)}}
+@keyframes sniff{50%{transform:rotate(6deg) translateY(2px)}}
+.heart{position:absolute;z-index:80;pointer-events:none;font-family:var(--hand);font-size:1.6rem;color:#ff8fab;animation:up 1.2s ease-out forwards}
+@keyframes up{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-60px)}}
+.toast{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);z-index:90;background:rgba(20,16,32,.85);color:var(--text);padding:8px 14px;border-radius:999px;font-size:.85rem;white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis}
+.title-card{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:95;font-family:var(--hand);font-size:2.6rem;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6);pointer-events:none;animation:fade 1.8s ease forwards;white-space:nowrap}
+@keyframes fade{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0}}
+
+.overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(15,11,26,.66);padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow-y:auto}
+.paper{background:var(--paper);color:var(--ink);border-radius:6px;padding:26px 24px 20px;width:100%;max-width:380px;box-shadow:0 18px 40px rgba(0,0,0,.4);transform:rotate(-1.5deg);animation:pop .45s cubic-bezier(.2,1.4,.4,1);
+  background-image:repeating-linear-gradient(180deg,transparent 0 31px,rgba(80,110,160,.18) 31px 32px)}
+@keyframes pop{from{transform:scale(.6) rotate(-8deg);opacity:0}}
+.who{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#8b6f7d;margin:0 0 8px}
+.note{font-family:var(--hand);font-size:1.9rem;line-height:1.15;margin:0 0 14px}
+.sign{font-family:var(--hand);font-size:1.4rem;text-align:right;margin:0 0 10px}
+.btn{font:inherit;font-weight:800;border:0;border-radius:999px;padding:10px 18px;background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+.final{max-width:440px;transform:none}
+.final h2{font-family:var(--hand);font-size:2.2rem;margin:0 0 4px;line-height:1}
+.final p{margin:0 0 12px;line-height:1.45}
+.pl-name{font-family:var(--hand);font-size:1.7rem;margin:0 0 10px}
+.part{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#8b6f7d;margin:14px 0 4px}
+.tracks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.tracks a{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:8px 0;border-bottom:1px dashed rgba(59,43,51,.25);color:inherit;text-decoration:none}
+.tracks a:hover .t,.tracks a:focus-visible .t{text-decoration:underline}
+.t{font-weight:800;min-width:0}
+.a{font-size:.88rem;color:#6d5562;grid-column:1;min-width:0}
+.g{grid-column:2;grid-row:1/3;align-self:center;font-size:.72rem;background:#efe1cf;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:0s!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Кошачьи находки</h1>
+    <p class="hint">В трёх комнатах спрятаны записки. Нажимай на светящиеся места, и один из котов сходит проверить. Котов можно гладить.</p>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Локации"></nav>
+  <div class="bar"><span id="count"></span><span class="dots" id="dots"></span></div>
+  <div class="stage" id="stage"><div class="scene" id="scene"></div></div>
+</div>
+
+<div class="overlay" id="noteOv" hidden>
+  <div class="paper" role="dialog" aria-modal="true" aria-labelledby="noteText">
+    <p class="who" id="who"></p>
+    <p class="note" id="noteText"></p>
+    <p class="sign">Олег</p>
+    <button class="btn" id="noteClose">Искать дальше</button>
+  </div>
+</div>
+
+<div class="overlay" id="finOv" hidden>
+  <div class="paper final" role="dialog" aria-modal="true" aria-labelledby="finTitle">
+    <h2 id="finTitle">Все записки найдены</h2>
+    <p>Коты обошли все комнаты. А теперь музыка на сегодня, вторник, 27 октября: двадцать песен из разных уголков мира.</p>
+    <p class="pl-name">Dans tes yeux, mon amour</p>
+    <a class="btn" href="https://open.spotify.com/playlist/4xB958xNUSaiayfyqsN5ZS" target="_blank" rel="noopener">Слушать в Spotify</a>
+    <div id="playlist" style="margin-top:12px"></div>
+    <div class="row">
+      <button class="btn" id="finClose">Вернуться к котам</button>
+      <button class="btn ghost" id="restart">Спрятать записки заново</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const S = (x,y)=>`<span class="spark" style="left:${x}%;top:${y}%"></span>`;
+  const LEVELS = [
+    {
+      name:"Гостиная", tab:"Гостиная",
+      bg:"linear-gradient(180deg,#342c4a 0%,#2a2340 60%,#7b4e35 60%,#6a412b 100%)",
+      glow:"radial-gradient(circle at 86% 42%,rgba(255,214,131,.28),transparent 45%)",
+      deco:`
+        <div class="deco" style="left:0;right:0;top:60%;bottom:0;background:repeating-linear-gradient(90deg,transparent 0 23%,rgba(0,0,0,.12) 23% 23.5%)"></div>
+        <div class="deco" style="left:14%;top:7%;width:34%;height:30%"><svg viewBox="0 0 100 90" preserveAspectRatio="none"><rect x="2" y="2" width="96" height="86" rx="3" fill="#18223f" stroke="#a88f74" stroke-width="4"/><circle cx="72" cy="24" r="10" fill="#fdf1c7"/><circle cx="76" cy="21" r="10" fill="#18223f"/><circle cx="20" cy="18" r="1.5" fill="#fff"/><circle cx="40" cy="34" r="1.2" fill="#fff"/><circle cx="58" cy="60" r="1.4" fill="#fff"/><circle cx="26" cy="66" r="1" fill="#fff"/><line x1="50" y1="2" x2="50" y2="88" stroke="#a88f74" stroke-width="3"/><line x1="2" y1="45" x2="98" y2="45" stroke="#a88f74" stroke-width="3"/></svg></div>
+        <div class="deco" style="left:88%;top:26%;width:10%;height:40%"><svg viewBox="0 0 30 120" preserveAspectRatio="none"><path d="M4 22 L26 22 L22 2 L8 2 Z" fill="#ffd683"/><rect x="14" y="22" width="2.5" height="92" fill="#d8c3a5"/><rect x="6" y="113" width="18" height="5" rx="2" fill="#d8c3a5"/></svg></div>`,
+      spots:[
+        {id:"curtain",name:"за шторой",x:14,y:66,label:"Штора",style:"left:3%;top:4%;width:14%;height:54%",svg:`<svg viewBox="0 0 40 150" preserveAspectRatio="none"><rect x="0" y="0" width="40" height="4" fill="#a88f74"/><path d="M2 4 Q12 75 4 150 L38 150 Q30 75 38 4 Z" fill="#8a4f6b"/><path d="M12 6 Q18 75 14 148" stroke="#6d3a55" stroke-width="2" fill="none"/><path d="M26 6 Q22 75 28 148" stroke="#6d3a55" stroke-width="2" fill="none"/></svg>`+S(45,70)},
+        {id:"shelf",name:"на полке между книг",x:74,y:68,label:"Полка с книгами",style:"left:58%;top:12%;width:36%;height:14%",svg:`<svg viewBox="0 0 100 40" preserveAspectRatio="none"><rect x="8" y="6" width="9" height="28" fill="#e2a85b"/><rect x="18" y="10" width="8" height="24" fill="#6fa3a0"/><rect x="27" y="4" width="10" height="30" fill="#c96a6a"/><rect x="40" y="12" width="7" height="22" fill="#9a86c9" transform="rotate(-12 44 34)"/><rect x="66" y="20" width="22" height="14" rx="3" fill="#e9dccb"/><rect x="0" y="34" width="100" height="6" fill="#a88f74"/></svg>`+S(62,30)},
+        {id:"mug",name:"в кружке на столике",x:24,y:72,label:"Столик с кружкой",style:"left:6%;top:47%;width:24%;height:22%",svg:`<svg viewBox="0 0 80 70" preserveAspectRatio="none"><rect x="28" y="6" width="16" height="16" rx="3" fill="#f2e9dd"/><path d="M44 10 q8 0 8 6 q0 6 -8 6" stroke="#f2e9dd" stroke-width="3" fill="none"/><rect x="2" y="22" width="76" height="7" rx="3" fill="#b98457"/><rect x="10" y="29" width="5" height="40" fill="#9a6a44"/><rect x="65" y="29" width="5" height="40" fill="#9a6a44"/></svg>`+S(44,6)},
+        {id:"pillow",name:"под подушкой в кресле",x:66,y:76,label:"Кресло с подушкой",style:"left:56%;top:44%;width:40%;height:26%",svg:`<svg viewBox="0 0 120 80" preserveAspectRatio="none"><rect x="10" y="4" width="100" height="44" rx="14" fill="#5d7f8f"/><rect x="0" y="34" width="24" height="36" rx="10" fill="#4f6f7e"/><rect x="96" y="34" width="24" height="36" rx="10" fill="#4f6f7e"/><rect x="20" y="44" width="80" height="22" rx="8" fill="#6b91a2"/><ellipse cx="60" cy="38" rx="22" ry="12" fill="#f0c6a8"/><rect x="14" y="66" width="6" height="12" fill="#3f2a1c"/><rect x="100" y="66" width="6" height="12" fill="#3f2a1c"/></svg>`+S(48,40)},
+        {id:"rug",name:"под ковриком",x:50,y:86,label:"Коврик",style:"left:22%;top:75%;width:56%;height:13%",svg:`<svg viewBox="0 0 100 24" preserveAspectRatio="none"><ellipse cx="50" cy="12" rx="49" ry="11" fill="#c47a8c"/><ellipse cx="50" cy="12" rx="38" ry="7.5" fill="none" stroke="#e8b3c0" stroke-width="1.6" stroke-dasharray="3 3"/></svg>`+S(70,40)},
+        {id:"box",name:"в коробке",x:31,y:93,label:"Коробка",style:"left:5%;top:80%;width:22%;height:14%",svg:`<svg viewBox="0 0 70 44" preserveAspectRatio="none"><rect x="4" y="12" width="62" height="32" fill="#c99a62"/><path d="M4 12 L-2 2 L30 4 L35 12 Z" fill="#dcae74"/><path d="M66 12 L72 2 L40 4 L35 12 Z" fill="#b8884f"/></svg>`+S(48,22)},
+        {id:"yarn",name:"в корзинке с клубками",x:72,y:95,label:"Корзинка с клубками",style:"left:76%;top:84%;width:18%;height:11%",svg:`<svg viewBox="0 0 60 36" preserveAspectRatio="none"><circle cx="20" cy="12" r="10" fill="#ff9e7a"/><circle cx="38" cy="10" r="9" fill="#9fd0c5"/><path d="M4 16 L56 16 L50 36 L10 36 Z" fill="#a8743f"/><path d="M8 22 L52 22 M9 28 L51 28" stroke="#8a5c2f" stroke-width="2"/></svg>`+S(30,4)}
+      ],
+      notes:[
+        "Если бы мне дали один взгляд на весь день, я бы потратил его на твои глаза.",
+        "Ты такая красивая, что я иногда забываю, что хотел сказать.",
+        "Коты нашли эту записку быстрее меня. Зато я нашёл тебя, и это моя главная находка.",
+        "Даже когда мы не рядом, я думаю о тебе чаще, чем проверяю телефон. А это очень часто.",
+        "Спасибо, что ты есть. Просто так, без повода.",
+        "Твоя улыбка делает мой день лучше, даже если я вижу её только на фото.",
+        "Это ещё не всё. Коты зовут на кухню."
+      ]
+    },
+    {
+      name:"Кухня", tab:"Кухня",
+      bg:"linear-gradient(180deg,#f2d7b6 0%,#e9c39c 60%,#e9e1d6 60%,#d9cfc2 100%)",
+      glow:"radial-gradient(circle at 50% 18%,rgba(255,240,190,.55),transparent 50%)",
+      deco:`
+        <div class="deco" style="left:0;right:0;top:60%;bottom:0;background:repeating-conic-gradient(#e6ddd0 0 25%,#cfc3b2 0 50%) 0 0/16% 12%;opacity:.9"></div>
+        <div class="deco" style="left:36%;top:8%;width:28%;height:24%"><svg viewBox="0 0 100 86" preserveAspectRatio="none"><rect x="2" y="2" width="96" height="82" rx="3" fill="#bfe2f5" stroke="#fff" stroke-width="5"/><circle cx="70" cy="30" r="13" fill="#ffd36b"/><ellipse cx="30" cy="56" rx="18" ry="7" fill="#fff" opacity=".9"/><line x1="50" y1="2" x2="50" y2="84" stroke="#fff" stroke-width="4"/></svg></div>`,
+      spots:[
+        {id:"fridge",name:"под магнитом на холодильнике",x:18,y:74,label:"Холодильник",style:"left:4%;top:14%;width:22%;height:56%",svg:`<svg viewBox="0 0 60 150" preserveAspectRatio="none"><rect x="1" y="1" width="58" height="148" rx="6" fill="#eef2f5" stroke="#c9d2da" stroke-width="2"/><line x1="1" y1="52" x2="59" y2="52" stroke="#c9d2da" stroke-width="2"/><rect x="48" y="16" width="4" height="26" rx="2" fill="#b8c2cc"/><rect x="48" y="62" width="4" height="34" rx="2" fill="#b8c2cc"/><path d="M20 26 c-4 -6 -12 -1 -6 6 l6 6 l6 -6 c6 -7 -2 -12 -6 -6z" fill="#ef7f94"/><rect x="10" y="70" width="18" height="14" fill="#fff6c7" transform="rotate(-6 19 77)"/></svg>`+S(30,16)},
+        {id:"teapot",name:"под чайником на плите",x:72,y:72,label:"Плита с чайником",style:"left:60%;top:30%;width:36%;height:38%",svg:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><ellipse cx="50" cy="26" rx="20" ry="16" fill="#6fb3a8"/><rect x="44" y="6" width="12" height="6" rx="3" fill="#4f8f85"/><path d="M70 22 q14 -4 16 -12" stroke="#6fb3a8" stroke-width="5" fill="none"/><path d="M30 18 q-12 4 -8 16" stroke="#4f8f85" stroke-width="4" fill="none"/><rect x="0" y="42" width="100" height="10" fill="#bfb2a3"/><rect x="4" y="52" width="92" height="48" fill="#fbf7f1" stroke="#d8cfc4" stroke-width="2"/><rect x="16" y="62" width="68" height="28" rx="3" fill="#2f2b2e"/><circle cx="20" cy="47" r="3" fill="#3a3436"/><circle cx="80" cy="47" r="3" fill="#3a3436"/></svg>`+S(46,18)},
+        {id:"chair",name:"под полотенцем на стуле",x:44,y:80,label:"Стул с полотенцем",style:"left:34%;top:50%;width:20%;height:26%",svg:`<svg viewBox="0 0 50 70" preserveAspectRatio="none"><rect x="6" y="0" width="38" height="34" rx="4" fill="#c58b5c"/><rect x="18" y="4" width="14" height="28" fill="#f4a3a8"/><rect x="18" y="4" width="14" height="4" fill="#e78389"/><rect x="2" y="34" width="46" height="8" rx="3" fill="#a8703f"/><rect x="6" y="42" width="5" height="28" fill="#8d5c33"/><rect x="39" y="42" width="5" height="28" fill="#8d5c33"/></svg>`+S(50,30)},
+        {id:"bowl",name:"под кошачьей миской",x:30,y:94,label:"Кошачья миска",style:"left:20%;top:86%;width:16%;height:7%",svg:`<svg viewBox="0 0 50 20" preserveAspectRatio="none"><path d="M2 4 L48 4 L42 20 L8 20 Z" fill="#7aa6d8"/><ellipse cx="25" cy="4" rx="23" ry="4" fill="#5c87b8"/><circle cx="25" cy="13" r="2.5" fill="#fff"/><circle cx="20" cy="10" r="1.3" fill="#fff"/><circle cx="25" cy="8.5" r="1.3" fill="#fff"/><circle cx="30" cy="10" r="1.3" fill="#fff"/></svg>`+S(60,-30)},
+        {id:"bag",name:"в бумажном пакете",x:70,y:95,label:"Бумажный пакет",style:"left:72%;top:76%;width:18%;height:20%",svg:`<svg viewBox="0 0 50 60" preserveAspectRatio="none"><path d="M4 10 L46 10 L48 60 L2 60 Z" fill="#d6b183"/><path d="M4 10 L10 2 L40 2 L46 10" fill="#c49c6c"/><path d="M8 10 q6 6 0 12 M42 10 q-6 6 0 12" stroke="#b58c5d" fill="none"/><ellipse cx="25" cy="10" rx="14" ry="3" fill="#3b2b2b" opacity=".5"/></svg>`+S(46,8)}
+      ],
+      notes:[
+        "Хочу, чтобы каждое твоё утро начиналось с чего-то тёплого. Пусть сегодня это будет эта записка.",
+        "Ты причина, по которой я улыбаюсь в телефон, как дурак.",
+        "Твои глаза самое красивое, что я видел. И я не преувеличиваю.",
+        "Если день тяжёлый, помни: кто-то прямо сейчас думает о тебе и скучает.",
+        "На кухне всё. Дальше балкон и звёзды."
+      ]
+    },
+    {
+      name:"Балкон", tab:"Балкон",
+      bg:"linear-gradient(180deg,#0e1633 0%,#1f2c57 52%,#5a4434 60%,#4a3729 100%)",
+      glow:"radial-gradient(circle at 50% 10%,rgba(255,200,120,.18),transparent 45%)",
+      deco:`
+        <div class="deco" style="left:0;top:0;width:100%;height:60%"><svg viewBox="0 0 100 60" preserveAspectRatio="none">
+          <g fill="#fff"><circle class="twinkle" cx="10" cy="8" r=".5"/><circle cx="24" cy="18" r=".4"/><circle class="twinkle" cx="40" cy="6" r=".6"/><circle cx="58" cy="14" r=".4"/><circle class="twinkle" cx="76" cy="9" r=".5"/><circle cx="90" cy="20" r=".4"/><circle cx="66" cy="26" r=".35"/><circle cx="16" cy="28" r=".35"/></g>
+          <circle cx="84" cy="14" r="4" fill="#fdf1c7"/>
+          <path d="M0 46 L6 46 L6 38 L12 38 L12 44 L18 44 L18 34 L26 34 L26 42 L32 42 L32 36 L40 36 L40 44 L48 44 L48 32 L54 32 L54 42 L62 42 L62 38 L70 38 L70 46 L78 46 L78 36 L86 36 L86 43 L94 43 L94 39 L100 39 L100 60 L0 60 Z" fill="#141c38"/>
+          <g fill="#ffd683" opacity=".8"><rect x="20" y="37" width=".8" height="1"/><rect x="22" y="40" width=".8" height="1"/><rect x="50" y="35" width=".8" height="1"/><rect x="51" y="39" width=".8" height="1"/><rect x="80" y="39" width=".8" height="1"/><rect x="8" y="41" width=".8" height="1"/><rect x="65" y="41" width=".8" height="1"/></g>
+          <path d="M0 4 Q25 12 50 5 Q75 12 100 4" stroke="#6b5a4a" stroke-width=".3" fill="none"/>
+          <g fill="#ffd683"><circle cx="10" cy="7" r=".9"/><circle cx="22" cy="9.6" r=".9"/><circle cx="34" cy="9.4" r=".9"/><circle cx="46" cy="6" r=".9"/><circle cx="58" cy="7.4" r=".9"/><circle cx="70" cy="9.8" r=".9"/><circle cx="82" cy="8.6" r=".9"/><circle cx="94" cy="5.5" r=".9"/></g>
+          <rect x="0" y="44" width="100" height="1.6" fill="#8a7563"/>
+          <g fill="#8a7563"><rect x="4" y="44" width=".8" height="16"/><rect x="14" y="44" width=".8" height="16"/><rect x="24" y="44" width=".8" height="16"/><rect x="34" y="44" width=".8" height="16"/><rect x="44" y="44" width=".8" height="16"/><rect x="54" y="44" width=".8" height="16"/><rect x="64" y="44" width=".8" height="16"/><rect x="74" y="44" width=".8" height="16"/><rect x="84" y="44" width=".8" height="16"/><rect x="94" y="44" width=".8" height="16"/></g>
+        </svg></div>
+        <div class="deco" style="left:0;right:0;top:60%;bottom:0;background:repeating-linear-gradient(180deg,transparent 0 14%,rgba(0,0,0,.18) 14% 15%)"></div>`,
+      spots:[
+        {id:"lantern",name:"под фонариком",x:16,y:72,label:"Фонарик",style:"left:9%;top:50%;width:10%;height:18%",svg:`<svg viewBox="0 0 30 54" preserveAspectRatio="none"><path d="M10 2 q5 -4 10 0" stroke="#3a3030" stroke-width="2" fill="none"/><rect x="5" y="6" width="20" height="5" fill="#3a3030"/><rect x="7" y="11" width="16" height="34" fill="#ffd683" opacity=".85"/><rect x="7" y="11" width="16" height="34" fill="none" stroke="#3a3030" stroke-width="2"/><rect x="4" y="45" width="22" height="6" fill="#3a3030"/></svg>`+S(45,50)},
+        {id:"telescope",name:"у телескопа",x:34,y:70,label:"Телескоп",style:"left:22%;top:32%;width:20%;height:34%",svg:`<svg viewBox="0 0 60 100" preserveAspectRatio="none"><rect x="6" y="16" width="44" height="12" rx="3" fill="#c9cbd6" transform="rotate(-24 28 22)"/><rect x="44" y="4" width="10" height="14" rx="2" fill="#a6a9b8" transform="rotate(-24 49 11)"/><line x1="30" y1="34" x2="12" y2="98" stroke="#7d6a59" stroke-width="3"/><line x1="30" y1="34" x2="48" y2="98" stroke="#7d6a59" stroke-width="3"/><line x1="30" y1="34" x2="30" y2="98" stroke="#7d6a59" stroke-width="3"/></svg>`+S(60,10)},
+        {id:"deckchair",name:"под пледом в шезлонге",x:66,y:78,label:"Шезлонг с пледом",style:"left:52%;top:46%;width:40%;height:28%",svg:`<svg viewBox="0 0 120 84" preserveAspectRatio="none"><path d="M8 10 L44 70 L114 70" stroke="#b98a5c" stroke-width="5" fill="none"/><path d="M14 12 L48 64 L108 64 L108 56 L54 56 L22 8 Z" fill="#e7d3b0"/><path d="M40 40 L100 46 L104 74 L46 72 Z" fill="#c96a7a"/><path d="M46 46 L102 52 M48 56 L102 60 M50 66 L104 68" stroke="#a9505f" stroke-width="2"/><line x1="44" y1="70" x2="36" y2="84" stroke="#b98a5c" stroke-width="4"/><line x1="110" y1="70" x2="116" y2="84" stroke="#b98a5c" stroke-width="4"/></svg>`+S(62,50)},
+        {id:"crate",name:"в деревянном ящике",x:32,y:92,label:"Деревянный ящик",style:"left:6%;top:79%;width:22%;height:14%",svg:`<svg viewBox="0 0 70 44" preserveAspectRatio="none"><rect x="2" y="4" width="66" height="40" fill="#a97b4f"/><g stroke="#7d5833" stroke-width="2"><line x1="2" y1="17" x2="68" y2="17"/><line x1="2" y1="30" x2="68" y2="30"/><line x1="4" y1="4" x2="66" y2="44"/></g><rect x="2" y="4" width="66" height="40" fill="none" stroke="#7d5833" stroke-width="3"/></svg>`+S(40,10)},
+        {id:"cushions",name:"между подушками",x:62,y:95,label:"Подушки на полу",style:"left:64%;top:82%;width:28%;height:13%",svg:`<svg viewBox="0 0 80 36" preserveAspectRatio="none"><ellipse cx="22" cy="24" rx="21" ry="11" fill="#7b9ccf"/><ellipse cx="54" cy="22" rx="22" ry="12" fill="#e6a46b"/><ellipse cx="40" cy="12" rx="14" ry="8" fill="#e8dfd2"/></svg>`+S(46,4)}
+      ],
+      notes:[
+        "Звёзд много, а ты одна. Поэтому ты важнее.",
+        "Когда смотрю на ночное небо, думаю: видишь ли ты его сейчас тоже?",
+        "Спасибо за каждый наш разговор, даже самый короткий.",
+        "Я горжусь тобой. Просто хочу, чтобы ты это знала.",
+        "Последняя: я без ума от тебя. Остальное скажет музыка."
+      ]
+    }
+  ];
+  const PLAYLIST = [
+    ["Sessa","Grandeza","бразильский фолк"],["Ichiko Aoba","Asleep Among Endives","японский фолк"],["Hania Rani","Eden","неоклассика"],
+    ["Jessica Pratt","Back, Baby","фолк"],["Fazerdaze","Lucky Girl","инди-поп"],["Kwiat Jabłoni","Dziś późno pójdę spać","польский фолк-поп"],
+    ["Altın Gün","Goca Dünya","турецкий психодел"],["Mdou Moctar","Afrique Victime","пустынный блюз"],["Mulatu Astatke","Yègèllé Tezeta","эфиоджаз"],
+    ["Kokoroko","Abusey Junction","афро-джаз"],["Hiatus Kaiyote","Building a Ladder","нео-соул"],["Charlotte Dos Santos","Watching You","джаз-соул"],
+    ["Yussef Dayes, Tom Misch","Nightrider","джаз"],["Cleo Sol","Why Don't You","соул"],["Men I Trust","Show Me How","дрим-поп"],
+    ["Nicolás Jaar","Mi Mujer","электроника"],["Tirzah","Devotion","экспериментальный R&B"],["Penguin Cafe Orchestra","Perpetuum Mobile","камерная музыка"],
+    ["Nils Frahm","Says","эмбиент"],["Alice Phoebe Lou","She","фолк"]
+  ];
+
+  const stage=document.getElementById('stage'), scene=document.getElementById('scene');
+  const tabsEl=document.getElementById('tabs'), dots=document.getElementById('dots'), countEl=document.getElementById('count');
+  const KEY='catnotes-v2';
+  let state={level:0,found:[[],[],[]]};
+  try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s&&Array.isArray(s.found)&&s.found.length===3){ state=s; } }catch(e){}
+  const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} };
+  const done=i=>state.found[i].length>=LEVELS[i].spots.length;
+  const unlocked=i=>i===0||done(i-1);
+
+  function renderTabs(){
+    tabsEl.innerHTML='';
+    LEVELS.forEach((L,i)=>{
+      const b=document.createElement('button'); b.className='tab'+(done(i)?' done':'');
+      b.textContent=`${i+1} · ${L.tab}`; b.disabled=!unlocked(i);
+      b.setAttribute('aria-current',i===state.level?'true':'false');
+      b.addEventListener('click',()=>{ if(!modalOpen&&i!==state.level) loadLevel(i,true); });
+      tabsEl.appendChild(b);
+    });
+  }
+  function renderCount(){
+    const L=LEVELS[state.level], f=state.found[state.level];
+    const total=LEVELS.reduce((a,l)=>a+l.spots.length,0), all=state.found.reduce((a,x)=>a+x.length,0);
+    countEl.textContent=`${L.name}: найдено ${f.length} из ${L.spots.length} · всего ${all} из ${total}`;
+    dots.innerHTML=''; L.spots.forEach((_,i)=>{ const d=document.createElement('i'); if(i<f.length) d.className='on'; dots.appendChild(d); });
+    scene.querySelectorAll('.obj').forEach(o=>o.classList.toggle('found',f.includes(o.dataset.spot)));
+  }
+
+  let modalOpen=false;
+  function loadLevel(i,announce){
+    state.level=i; save();
+    const L=LEVELS[i];
+    stage.style.background=L.bg;
+    scene.innerHTML=`<div class="glowspot" style="background:${L.glow}"></div>`+L.deco;
+    L.spots.forEach(s=>{
+      const b=document.createElement('button'); b.className='obj'; b.dataset.spot=s.id;
+      b.setAttribute('aria-label',s.label); b.setAttribute('style',s.style); b.innerHTML=s.svg;
+      b.addEventListener('click',()=>onSpot(s));
+      scene.appendChild(b);
+    });
+    cats.forEach((c,k)=>{ c.busy=false; clearTimeout(c.timer); c.el.classList.remove('walking'); c.walking=false; c.el.style.transitionDuration='0ms'; c.x=k?62:38; c.y=k?92:80; c.el.style.left=c.x+'%'; c.el.style.top=c.y+'%'; });
+    if(announce){ const t=document.createElement('div'); t.className='title-card'; t.textContent=L.name; stage.appendChild(t); setTimeout(()=>t.remove(),1900); }
+    renderTabs(); renderCount();
+  }
+
+  function catSVG(eye){
+    return `<div class="flip"><svg viewBox="0 0 120 100" aria-hidden="true"><g class="bob">
+      <path class="tail" d="M22 70 C4 62 2 40 12 26" stroke="#fff" stroke-width="9" stroke-linecap="round" fill="none"/>
+      <rect class="leg-a" x="30" y="76" width="10" height="20" rx="5" fill="#f4f1f8"/>
+      <rect class="leg-b" x="64" y="76" width="10" height="20" rx="5" fill="#f4f1f8"/>
+      <ellipse cx="50" cy="66" rx="34" ry="20" fill="#fff"/>
+      <rect class="leg-b" x="38" y="76" width="10" height="20" rx="5" fill="#fff"/>
+      <rect class="leg-a" x="72" y="76" width="10" height="20" rx="5" fill="#fff"/>
+      <g class="head">
+        <polygon points="73,36 75,14 89,28" fill="#fff"/><polygon points="77,32 78,20 86,28" fill="#f7c1cf"/>
+        <polygon points="93,28 104,12 106,36" fill="#fff"/><polygon points="96,28 103,18 104,32" fill="#f7c1cf"/>
+        <circle cx="90" cy="46" r="20" fill="#fff"/>
+        <circle cx="84" cy="43" r="4.6" fill="${eye}"/><ellipse cx="84" cy="43" rx="1.4" ry="3.4" fill="#222"/>
+        <circle cx="98" cy="43" r="4.6" fill="${eye}"/><ellipse cx="98" cy="43" rx="1.4" ry="3.4" fill="#222"/>
+        <path d="M89 50 L93 50 L91 53 Z" fill="#f29bb0"/>
+        <path d="M91 53 q-3 4 -6 2 M91 53 q3 4 6 2" stroke="#c9b8c6" stroke-width="1.2" fill="none"/>
+        <path d="M78 52 L66 50 M78 55 L66 57 M104 52 L116 50 M104 55 L116 57" stroke="#d8d0de" stroke-width="1"/>
+      </g></g></svg></div>`;
+  }
+  const cats=[{name:"Голубоглазый",eye:"#6db8ff",x:38,y:80},{name:"Янтарноглазый",eye:"#f2a531",x:62,y:92}].map(c=>{
+    const el=document.createElement('div'); el.className='cat'; el.innerHTML=catSVG(c.eye);
+    el.setAttribute('role','button'); el.setAttribute('aria-label','Погладить: '+c.name); el.tabIndex=0;
+    stage.appendChild(el);
+    const cat=Object.assign(c,{el,busy:false,walking:false,timer:null});
+    const pet=e=>{ e.stopPropagation(); petCat(cat); };
+    el.addEventListener('click',pet);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pet(e);} });
+    return cat;
+  });
+
+  function moveCat(cat,x,y,cb){
+    clearTimeout(cat.timer);
+    const r=stage.getBoundingClientRect();
+    const dx=(x-cat.x)*r.width/100, dy=(y-cat.y)*r.height/100;
+    const ms=Math.max(350,Math.hypot(dx,dy)*7);
+    if(Math.abs(dx)>2) cat.el.classList.toggle('left',dx<0);
+    cat.el.style.transitionDuration=ms+'ms';
+    cat.el.classList.add('walking'); cat.walking=true;
+    cat.x=x; cat.y=y; cat.el.style.left=x+'%'; cat.el.style.top=y+'%';
+    cat.el.style.zIndex=50+Math.round(y/10);
+    cat.timer=setTimeout(()=>{ cat.el.classList.remove('walking'); cat.walking=false; cb&&cb(); },ms);
+  }
+  function heart(x,y,txt){
+    const h=document.createElement('div'); h.className='heart'; h.textContent=txt;
+    h.style.left=x+'%'; h.style.top=y+'%'; stage.appendChild(h); setTimeout(()=>h.remove(),1300);
+  }
+  const PURR=["мрр","♥","мур-мур","♥♥","мяу"];
+  function petCat(cat){
+    cat.el.classList.remove('happy'); void cat.el.offsetWidth; cat.el.classList.add('happy');
+    heart(cat.x,cat.y-16,PURR[Math.floor(Math.random()*PURR.length)]);
+  }
+  let toastT;
+  function toast(msg){
+    let t=stage.querySelector('.toast');
+    if(!t){ t=document.createElement('div'); t.className='toast'; stage.appendChild(t); }
+    t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2200);
+  }
+
+  function onSpot(s){
+    if(modalOpen) return;
+    const lvl=state.level, f=state.found[lvl];
+    if(f.includes(s.id)){ toast('Тут уже пусто, коты всё проверили'); return; }
+    if(cats.some(c=>c.busy&&c.target===s.id)) return;
+    const free=cats.filter(c=>!c.busy);
+    if(!free.length){ toast('Оба кота уже ищут, подожди секунду'); return; }
+    const cat=free.sort((a,b)=>Math.hypot(a.x-s.x,a.y-s.y)-Math.hypot(b.x-s.x,b.y-s.y))[0];
+    cat.busy=true; cat.target=s.id;
+    moveCat(cat,s.x,s.y,()=>{
+      if(state.level!==lvl){ cat.busy=false; return; }
+      cat.el.classList.add('sniff');
+      setTimeout(()=>{
+        cat.el.classList.remove('sniff'); cat.busy=false; cat.target=null;
+        if(state.level!==lvl||f.includes(s.id)) return;
+        f.push(s.id); save(); renderCount(); renderTabs();
+        showNote(cat,s,f.length-1);
+      },900);
+    });
+  }
+
+  const noteOv=document.getElementById('noteOv'), finOv=document.getElementById('finOv'), noteClose=document.getElementById('noteClose');
+  function showNote(cat,s,i){
+    modalOpen=true;
+    const lvl=state.level;
+    document.getElementById('who').textContent=`${cat.name} нашёл записку ${s.name}`;
+    document.getElementById('noteText').textContent=LEVELS[lvl].notes[i];
+    if(done(lvl)) noteClose.textContent = lvl<LEVELS.length-1 ? `Дальше: ${LEVELS[lvl+1].name}` : 'А что дальше?';
+    else noteClose.textContent='Искать дальше';
+    noteOv.hidden=false; noteClose.focus();
+  }
+  noteClose.addEventListener('click',()=>{
+    noteOv.hidden=true; modalOpen=false;
+    const lvl=state.level;
+    if(done(lvl)){
+      if(lvl<LEVELS.length-1) loadLevel(lvl+1,true);
+      else showFinal();
+    }
+  });
+
+  function showFinal(){
+    modalOpen=true;
+    const pl=document.getElementById('playlist'); pl.innerHTML='';
+    const ul=document.createElement('ul'); ul.className='tracks';
+    PLAYLIST.forEach(([artist,title,genre])=>{
+      const li=document.createElement('li'), a=document.createElement('a');
+      a.href='https://open.spotify.com/search/'+encodeURIComponent(artist+' '+title); a.target='_blank'; a.rel='noopener';
+      a.innerHTML='<span class="t"></span><span class="g"></span><span class="a"></span>';
+      a.querySelector('.t').textContent=title; a.querySelector('.a').textContent=artist; a.querySelector('.g').textContent=genre;
+      li.appendChild(a); ul.appendChild(li);
+    });
+    pl.appendChild(ul);
+    finOv.hidden=false; document.getElementById('finClose').focus();
+    cats.forEach(c=>setTimeout(()=>petCat(c),300));
+  }
+  document.getElementById('finClose').addEventListener('click',()=>{ finOv.hidden=true; modalOpen=false; });
+  document.getElementById('restart').addEventListener('click',()=>{ state={level:0,found:[[],[],[]]}; save(); finOv.hidden=true; modalOpen=false; loadLevel(0,true); });
+
+  setInterval(()=>{
+    cats.forEach(c=>{
+      if(c.busy||c.walking||modalOpen) return;
+      if(Math.random()<0.45) moveCat(c,12+Math.random()*76,70+Math.random()*25);
+    });
+  },2600);
+
+  loadLevel(state.level,true);
+  if(LEVELS.every((_,i)=>done(i))) setTimeout(showFinal,500);
+})();
+</script>
+
+</body></html>
